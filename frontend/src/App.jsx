@@ -16,10 +16,73 @@ const PHASES = [
   { id: 5, label: 'Launch', title: '30-Day Plan', icon: '🚀' },
 ];
 
+function ApiKeyGate({ onSubmit }) {
+  const [key, setKey] = useState('');
+  const valid = key.trim().startsWith('sk-ant-') && key.trim().length > 20;
+
+  return (
+    <div className="app">
+      <header className="header">
+        <div className="header-inner">
+          <div className="logo">
+            <div className="logo-mark">⚡</div>
+            <span className="logo-name">ShopifyAgent<span>.ai</span></span>
+          </div>
+          <div className="header-badge">Powered by Claude</div>
+        </div>
+      </header>
+      <main className="main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+        <div className="card" style={{ maxWidth: 480, width: '100%' }}>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>🔑</div>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--dark)', marginBottom: 8 }}>
+              Enter your Anthropic API Key
+            </h1>
+            <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              Your key is sent directly to Claude and never stored on our servers. Each session requires you to enter it once.
+            </p>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Anthropic API Key</label>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="sk-ant-..."
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && valid && onSubmit(key.trim())}
+              autoFocus
+            />
+            <div className="form-hint">
+              Don't have a key?{' '}
+              <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer"
+                style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
+                Get one free at console.anthropic.com →
+              </a>
+            </div>
+          </div>
+
+          <button
+            className="btn btn-primary btn-lg btn-block"
+            onClick={() => onSubmit(key.trim())}
+            disabled={!valid}
+          >
+            Start Building My Shopify Business →
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export default function App() {
+  const [apiKey, setApiKey] = useState('');
   const [currentPhase, setCurrentPhase] = useState(1);
   const [projectData, setProjectData] = useState({});
   const [completed, setCompleted] = useState(false);
+
+  if (!apiKey) return <ApiKeyGate onSubmit={setApiKey} />;
 
   const handlePhaseComplete = (phaseNum, data) => {
     const updated = { ...projectData, [`phase${phaseNum}`]: data };
@@ -49,6 +112,7 @@ export default function App() {
 
   const phaseProps = {
     projectData,
+    apiKey,
     onComplete: (data) => handlePhaseComplete(currentPhase, data),
     onBack: () => { if (currentPhase > 1) { setCurrentPhase(currentPhase - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
   };

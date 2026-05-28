@@ -24,7 +24,7 @@ const PRICE_RANGES = [
 
 const SKILL_LEVELS = ['Complete beginner', 'Some experience', 'Intermediate', 'Advanced / Expert'];
 
-export default function ProductCreation({ projectData, onComplete, onBack }) {
+export default function ProductCreation({ projectData, onComplete, onBack, apiKey }) {
   const phase1 = projectData?.phase1;
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [inputs, setInputs] = useState({
@@ -53,7 +53,7 @@ export default function ProductCreation({ projectData, onComplete, onBack }) {
     try {
       const res = await fetch('/api/phase2', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify({
           ...inputs,
           productType: selectedTypes.join(', '),

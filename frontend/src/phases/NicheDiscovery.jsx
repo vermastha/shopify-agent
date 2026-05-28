@@ -16,7 +16,7 @@ const HOURS_OPTIONS = [
   '20–40 hours/week (Full focus)',
 ];
 
-export default function NicheDiscovery({ onComplete }) {
+export default function NicheDiscovery({ onComplete, apiKey }) {
   const [inputs, setInputs] = useState({
     interests: '',
     budget: BUDGET_OPTIONS[1],
@@ -38,7 +38,7 @@ export default function NicheDiscovery({ onComplete }) {
     try {
       const res = await fetch('/api/phase1', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify(inputs),
       });
       const data = await res.json();

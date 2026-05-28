@@ -14,11 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
 
-async function callClaude(systemPrompt, userContent, maxTokens = 4096) {
+async function callClaude(apiKey, systemPrompt, userContent, maxTokens = 4096) {
+  const anthropic = new Anthropic({ apiKey });
   const message = await anthropic.messages.create({
     model: MODEL,
     max_tokens: maxTokens,
@@ -26,6 +25,15 @@ async function callClaude(systemPrompt, userContent, maxTokens = 4096) {
     messages: [{ role: 'user', content: userContent }],
   });
   return message.content[0].text;
+}
+
+function getApiKey(req, res) {
+  const key = req.headers['x-api-key'];
+  if (!key) {
+    res.status(401).json({ error: 'No API key provided. Please enter your Anthropic API key.' });
+    return null;
+  }
+  return key;
 }
 
 // Phase 1: Niche Discovery
@@ -75,8 +83,10 @@ For each niche provide:
 
 Be specific. No generic advice. Every recommendation should be tailored to their exact profile.`;
 
+  const apiKey = getApiKey(req, res);
+  if (!apiKey) return;
   try {
-    const result = await callClaude(system, user);
+    const result = await callClaude(apiKey, system, user);
     res.json({ result });
   } catch (err) {
     console.error('Phase 1 error:', err.message);
@@ -137,8 +147,10 @@ For each product, provide:
 
 Make these products realistic for someone at a ${skillLevel} level. Prioritize products that can be created quickly but sold repeatedly.`;
 
+  const apiKey = getApiKey(req, res);
+  if (!apiKey) return;
   try {
-    const result = await callClaude(system, user);
+    const result = await callClaude(apiKey, system, user);
     res.json({ result });
   } catch (err) {
     console.error('Phase 2 error:', err.message);
@@ -207,8 +219,10 @@ For each: **[Name]** — [why it works]
 
 Make everything specific to this niche and product. Every word should be written as if it's going live tomorrow.`;
 
+  const apiKey = getApiKey(req, res);
+  if (!apiKey) return;
   try {
-    const result = await callClaude(system, user);
+    const result = await callClaude(apiKey, system, user);
     res.json({ result });
   } catch (err) {
     console.error('Phase 3 error:', err.message);
@@ -277,8 +291,10 @@ For each version:
 
 Make all content feel human, specific to this product, and designed to drive clicks and conversions.`;
 
+  const apiKey = getApiKey(req, res);
+  if (!apiKey) return;
   try {
-    const result = await callClaude(system, user, 5000);
+    const result = await callClaude(apiKey, system, user, 5000);
     res.json({ result });
   } catch (err) {
     console.error('Phase 4 error:', err.message);
@@ -344,8 +360,10 @@ Top 5 tasks to focus on after the launch month — how to build on momentum or c
 
 Make the plan realistic for someone with ${hoursPerWeek} hours/week and a $${weeklyBudget}/week budget. Every day should be achievable without burning out.`;
 
+  const apiKey = getApiKey(req, res);
+  if (!apiKey) return;
   try {
-    const result = await callClaude(system, user, 5000);
+    const result = await callClaude(apiKey, system, user, 5000);
     res.json({ result });
   } catch (err) {
     console.error('Phase 5 error:', err.message);

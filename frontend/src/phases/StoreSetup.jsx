@@ -12,7 +12,7 @@ const BRAND_VALUE_OPTIONS = [
   'Luxury & Premium',
 ];
 
-export default function StoreSetup({ projectData, onComplete, onBack }) {
+export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) {
   const phase1 = projectData?.phase1;
   const phase2 = projectData?.phase2;
 
@@ -43,7 +43,7 @@ export default function StoreSetup({ projectData, onComplete, onBack }) {
     try {
       const res = await fetch('/api/phase3', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify({
           ...inputs,
           brandValues: selectedValues.join(', '),

@@ -12,7 +12,7 @@ const PLATFORM_OPTIONS = [
   'Threads',
 ];
 
-export default function MarketingContent({ projectData, onComplete, onBack }) {
+export default function MarketingContent({ projectData, onComplete, onBack, apiKey }) {
   const phase2 = projectData?.phase2;
   const phase3 = projectData?.phase3;
   const phase1 = projectData?.phase1;
@@ -49,7 +49,7 @@ export default function MarketingContent({ projectData, onComplete, onBack }) {
     try {
       const res = await fetch('/api/phase4', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify({
           ...inputs,
           platforms: selectedPlatforms.join(', '),

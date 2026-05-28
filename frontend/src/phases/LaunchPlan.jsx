@@ -16,7 +16,7 @@ const HOURS_OPTIONS = [
   '20–40 hours/week (Full-time)',
 ];
 
-export default function LaunchPlan({ projectData, onComplete, onBack }) {
+export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) {
   const phase1 = projectData?.phase1;
   const phase2 = projectData?.phase2;
   const phase3 = projectData?.phase3;
@@ -47,7 +47,7 @@ export default function LaunchPlan({ projectData, onComplete, onBack }) {
     try {
       const res = await fetch('/api/phase5', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify({
           ...inputs,
           allContext: {
