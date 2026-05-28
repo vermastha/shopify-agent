@@ -170,12 +170,45 @@ function StoreTypeGate({ onSubmit }) {
   );
 }
 
+function SwitchStoreModal({ currentType, onConfirm, onCancel }) {
+  const target = currentType === 'physical' ? 'digital' : 'physical';
+  const targetLabel = target === 'physical' ? '📦 Physical Store' : '💻 Digital Store';
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.5)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: 1000, padding: 24,
+    }}>
+      <div className="card" style={{ maxWidth: 420, width: '100%', padding: 28 }}>
+        <div style={{ fontSize: 36, marginBottom: 12, textAlign: 'center' }}>🔄</div>
+        <h2 style={{ fontWeight: 700, fontSize: '1.15rem', color: 'var(--dark)', marginBottom: 8, textAlign: 'center' }}>
+          Switch to {targetLabel}?
+        </h2>
+        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', lineHeight: 1.6, textAlign: 'center', marginBottom: 24 }}>
+          Switching store type will clear your current progress and restart from Phase 1 with{' '}
+          <strong>{target === 'physical' ? 'physical product' : 'digital product'}</strong> recommendations.
+        </p>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-ghost" style={{ flex: 1 }} onClick={onCancel}>
+            Keep current
+          </button>
+          <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => onConfirm(target)}>
+            Yes, switch →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [apiKey, setApiKey] = useState('');
   const [storeType, setStoreType] = useState('');
   const [currentPhase, setCurrentPhase] = useState(1);
   const [projectData, setProjectData] = useState({});
   const [completed, setCompleted] = useState(false);
+  const [showSwitchModal, setShowSwitchModal] = useState(false);
 
   if (!apiKey) return <ApiKeyGate onSubmit={setApiKey} />;
   if (!storeType) return <StoreTypeGate onSubmit={setStoreType} />;
@@ -207,6 +240,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSwitchConfirm = (newType) => {
+    setStoreType(newType);
+    setCurrentPhase(1);
+    setProjectData({});
+    setCompleted(false);
+    setShowSwitchModal(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const phaseProps = {
     projectData,
     apiKey,
@@ -227,9 +269,18 @@ export default function App() {
   };
 
   const storeTypeBadge = storeType === 'physical' ? '📦 Physical Store' : '💻 Digital Store';
+  const switchLabel = storeType === 'physical' ? 'Switch to Digital' : 'Switch to Physical';
 
   return (
     <div className="app">
+      {showSwitchModal && (
+        <SwitchStoreModal
+          currentType={storeType}
+          onConfirm={handleSwitchConfirm}
+          onCancel={() => setShowSwitchModal(false)}
+        />
+      )}
+
       <header className="header">
         <div className="header-inner">
           <div className="logo">
@@ -250,6 +301,19 @@ export default function App() {
             <div className="header-badge" style={{ background: 'rgba(255,255,255,0.12)', fontSize: 12 }}>
               {storeTypeBadge}
             </div>
+            <button
+              onClick={() => setShowSwitchModal(true)}
+              style={{
+                background: 'none', border: '1px solid var(--gray-300)',
+                borderRadius: 99, padding: '4px 12px', fontSize: 12,
+                fontWeight: 500, color: 'var(--gray-600)', cursor: 'pointer',
+                whiteSpace: 'nowrap', transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.color = 'var(--primary)'; }}
+              onMouseLeave={(e) => { e.target.style.borderColor = 'var(--gray-300)'; e.target.style.color = 'var(--gray-600)'; }}
+            >
+              {switchLabel} ⇄
+            </button>
             <div className="header-badge">AI Powered</div>
           </div>
         </div>
