@@ -70,7 +70,9 @@ export default function NicheDiscovery({ onComplete, apiKey, storeType }) {
             <label className="form-label">What are your interests, skills, or expertise? *</label>
             <textarea
               className="form-textarea"
-              placeholder="e.g. graphic design, personal finance, fitness, cooking, coding tutorials, photography, parenting..."
+              placeholder={storeType === 'physical'
+                ? 'e.g. home decor, pet accessories, fitness gear, baby products, skincare, kitchen tools, outdoor equipment...'
+                : 'e.g. graphic design, personal finance, fitness, cooking, coding tutorials, photography, parenting...'}
               value={inputs.interests}
               onChange={set('interests')}
               rows={4}

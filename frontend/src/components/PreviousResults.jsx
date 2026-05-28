@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-const PHASE_META = {
+const getPhaseMetа = (storeType) => ({
   phase1: { label: 'Phase 1', title: 'Niche Discovery', icon: '🔍' },
-  phase2: { label: 'Phase 2', title: 'Digital Product', icon: '📦' },
+  phase2: { label: 'Phase 2', title: storeType === 'physical' ? 'Physical Product' : 'Digital Product', icon: '📦' },
   phase3: { label: 'Phase 3', title: 'Store Setup', icon: '🏪' },
   phase4: { label: 'Phase 4', title: 'Marketing Content', icon: '📢' },
   phase5: { label: 'Phase 5', title: '30-Day Launch Plan', icon: '🚀' },
-};
+});
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -23,9 +23,9 @@ function CopyButton({ text }) {
   );
 }
 
-function PhaseResultCard({ phaseKey, data }) {
+function PhaseResultCard({ phaseKey, data, storeType }) {
   const [open, setOpen] = useState(false);
-  const meta = PHASE_META[phaseKey];
+  const meta = getPhaseMetа(storeType)[phaseKey];
   if (!data?.output) return null;
 
   return (
@@ -52,8 +52,8 @@ function PhaseResultCard({ phaseKey, data }) {
   );
 }
 
-export default function PreviousResults({ projectData, currentPhase }) {
-  const completedPhases = Object.keys(PHASE_META).filter((key) => {
+export default function PreviousResults({ projectData, currentPhase, storeType }) {
+  const completedPhases = Object.keys(getPhaseMetа(storeType)).filter((key) => {
     const num = parseInt(key.replace('phase', ''));
     return num < currentPhase && projectData[key]?.output;
   });
@@ -68,7 +68,7 @@ export default function PreviousResults({ projectData, currentPhase }) {
       </div>
       <div className="prev-results-list">
         {completedPhases.map((key) => (
-          <PhaseResultCard key={key} phaseKey={key} data={projectData[key]} />
+          <PhaseResultCard key={key} phaseKey={key} data={projectData[key]} storeType={storeType} />
         ))}
       </div>
     </div>

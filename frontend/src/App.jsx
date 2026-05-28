@@ -261,7 +261,7 @@ export default function App() {
         ) : (
           <>
             {renderPhase()}
-            <PreviousResults projectData={projectData} currentPhase={currentPhase} />
+            <PreviousResults projectData={projectData} currentPhase={currentPhase} storeType={storeType} />
           </>
         )}
       </main>
