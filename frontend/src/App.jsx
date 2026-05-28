@@ -28,7 +28,7 @@ function ApiKeyGate({ onSubmit }) {
             <div className="logo-mark">⚡</div>
             <span className="logo-name">ShopifyAgent<span>.ai</span></span>
           </div>
-          <div className="header-badge">Powered by Claude</div>
+          <div className="header-badge">AI Powered</div>
         </div>
       </header>
       <main className="main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
@@ -36,15 +36,15 @@ function ApiKeyGate({ onSubmit }) {
           <div style={{ textAlign: 'center', marginBottom: 24 }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🔑</div>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--dark)', marginBottom: 8 }}>
-              Enter your Anthropic API Key
+              Enter your API Key
             </h1>
             <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-              Your key is sent directly to Claude and never stored on our servers. Each session requires you to enter it once.
+              Your key powers the AI and is never stored on our servers. Each session requires you to enter it once.
             </p>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Anthropic API Key</label>
+            <label className="form-label">API Key</label>
             <input
               type="password"
               className="form-input"
@@ -58,7 +58,7 @@ function ApiKeyGate({ onSubmit }) {
               Don't have a key?{' '}
               <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer"
                 style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
-                Get one free at console.anthropic.com →
+                Get your API key →
               </a>
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function App() {
             />
           )}
 
-          <div className="header-badge">Powered by Claude</div>
+          <div className="header-badge">AI Powered</div>
         </div>
       </header>
 

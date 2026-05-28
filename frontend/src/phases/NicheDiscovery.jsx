@@ -57,7 +57,7 @@ export default function NicheDiscovery({ onComplete, apiKey }) {
         <div className="phase-badge">Phase 1 of 5 · 🔍 Niche Discovery</div>
         <h1 className="phase-title">Find Your Profitable Niche</h1>
         <p className="phase-desc">
-          Tell us about yourself and Claude will identify 3 high-potential niches tailored specifically to your skills, budget, and goals.
+          Tell us about yourself and your Shopify Agent will identify 3 high-potential niches tailored specifically to your skills, budget, and goals.
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export default function NicheDiscovery({ onComplete, apiKey }) {
           error={error}
           emptyIcon="🔍"
           emptyTitle="3 Niche Recommendations"
-          emptyDesc="Claude will analyze your profile and surface the most profitable niches for your digital product business."
+          emptyDesc="Your Shopify Agent will analyze your profile and surface the most profitable niches for your digital product business."
           onProceed={() => onComplete({ inputs, output })}
           proceedLabel="I've chosen my niche → Next Phase"
         />

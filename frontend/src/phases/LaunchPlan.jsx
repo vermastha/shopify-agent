@@ -128,7 +128,7 @@ export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) 
             <select className="form-select" value={inputs.weeklyBudget} onChange={set('weeklyBudget')}>
               {BUDGET_OPTIONS.map((o) => <option key={o}>{o}</option>)}
             </select>
-            <div className="form-hint">Claude will build a plan that stays within this budget.</div>
+            <div className="form-hint">Your agent will build a plan that stays within this budget.</div>
           </div>
 
           <div className="form-group">
@@ -140,7 +140,7 @@ export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) 
 
           <div className="card" style={{ background: 'var(--primary-light)', border: '1px solid rgba(0,184,107,0.2)', marginTop: 16 }}>
             <p style={{ fontSize: 13, color: 'var(--primary-dark)', lineHeight: 1.6 }}>
-              <strong>🎯 Final Phase:</strong> Claude will synthesize everything from all 5 phases into a complete, actionable 30-day roadmap tailored to your exact situation.
+              <strong>🎯 Final Phase:</strong> Your Shopify Agent will synthesize everything from all 5 phases into a complete, actionable 30-day roadmap tailored to your exact situation.
             </p>
           </div>
 

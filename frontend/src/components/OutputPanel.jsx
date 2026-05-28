@@ -37,7 +37,7 @@ export default function OutputPanel({
           <div className="output-header-left">
             <div className={`output-status-dot ${loading ? 'pulse' : hasOutput ? 'active' : ''}`} />
             <span className="output-label">
-              {loading ? 'Claude is generating...' : hasOutput ? 'AI Output Ready' : 'Waiting for input'}
+              {loading ? 'Your Shopify Agent is thinking...' : hasOutput ? 'AI Output Ready' : 'Waiting for input'}
             </span>
           </div>
           {hasOutput && !loading && <CopyButton text={output} />}
@@ -53,7 +53,7 @@ export default function OutputPanel({
                   <span>.</span><span>.</span><span>.</span>
                 </span>
               </div>
-              <div className="loading-sub">Claude is analyzing your inputs and crafting results</div>
+              <div className="loading-sub">Analyzing your inputs and crafting results</div>
             </div>
           )}
 
@@ -67,10 +67,10 @@ export default function OutputPanel({
                     : error}
                 </div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: 4 }}>
-                  Make sure your Anthropic API key is valid and has credits at{' '}
+                  Make sure your API key is valid and has credits —{' '}
                   <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer"
                     style={{ color: '#94a3b8', textDecoration: 'underline' }}>
-                    console.anthropic.com
+                    check your account
                   </a>
                 </div>
               </div>

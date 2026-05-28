@@ -100,7 +100,7 @@ export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) 
               value={inputs.productName}
               onChange={set('productName')}
             />
-            <div className="form-hint">The hero product Claude will write copy around.</div>
+            <div className="form-hint">The hero product your agent will write copy around.</div>
           </div>
 
           <div className="form-group">
@@ -131,7 +131,7 @@ export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) 
               value={inputs.storeNameIdeas}
               onChange={set('storeNameIdeas')}
             />
-            <div className="form-hint">Leave blank and Claude will generate them from scratch.</div>
+            <div className="form-hint">Leave blank and your agent will generate them from scratch.</div>
           </div>
 
           <div className="action-row">

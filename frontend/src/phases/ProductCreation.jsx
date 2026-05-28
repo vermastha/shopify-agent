@@ -76,7 +76,7 @@ export default function ProductCreation({ projectData, onComplete, onBack, apiKe
         <div className="phase-badge">Phase 2 of 5 · 📦 Digital Product Creation</div>
         <h1 className="phase-title">Design Your Digital Products</h1>
         <p className="phase-desc">
-          Claude will generate 5 ready-to-build digital product ideas — complete with descriptions, pricing, and creation timelines.
+          Your Shopify Agent will generate 5 ready-to-build digital product ideas — complete with descriptions, pricing, and creation timelines.
         </p>
       </div>
 
@@ -151,7 +151,7 @@ export default function ProductCreation({ projectData, onComplete, onBack, apiKe
           error={error}
           emptyIcon="📦"
           emptyTitle="5 Product Ideas Incoming"
-          emptyDesc="Claude will design 5 digital products built for your niche — with pricing, content lists, and creation timelines."
+          emptyDesc="Your Shopify Agent will design 5 digital products built for your niche — with pricing, content lists, and creation timelines."
           onProceed={() => onComplete({ inputs: { ...inputs, productType: selectedTypes.join(', ') }, output })}
           proceedLabel="Pick my product → Next Phase"
         />
