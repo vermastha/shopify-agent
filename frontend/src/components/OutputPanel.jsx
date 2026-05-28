@@ -61,9 +61,17 @@ export default function OutputPanel({
             <div className="output-error">
               <span className="output-error-icon">⚠️</span>
               <div>
-                <div className="output-error-msg">{error}</div>
+                <div className="output-error-msg">
+                  {error === 'Load failed' || error === 'Failed to fetch' || error === 'NetworkError when attempting to fetch resource.'
+                    ? 'Could not reach the server. Try refreshing and trying again.'
+                    : error}
+                </div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: 4 }}>
-                  Check that your API key is set correctly in backend/.env
+                  Make sure your Anthropic API key is valid and has credits at{' '}
+                  <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer"
+                    style={{ color: '#94a3b8', textDecoration: 'underline' }}>
+                    console.anthropic.com
+                  </a>
                 </div>
               </div>
             </div>
