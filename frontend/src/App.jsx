@@ -10,7 +10,7 @@ import PreviousResults from './components/PreviousResults';
 
 const PHASES = [
   { id: 1, label: 'Niche', title: 'Niche Discovery', icon: '🔍' },
-  { id: 2, label: 'Product', title: 'Digital Product', icon: '📦' },
+  { id: 2, label: 'Product', title: 'Product Creation', icon: '📦' },
   { id: 3, label: 'Store', title: 'Store Setup', icon: '🏪' },
   { id: 4, label: 'Marketing', title: 'Marketing', icon: '📢' },
   { id: 5, label: 'Launch', title: '30-Day Plan', icon: '🚀' },
@@ -76,13 +76,109 @@ function ApiKeyGate({ onSubmit }) {
   );
 }
 
+function StoreTypeGate({ onSubmit }) {
+  const [selected, setSelected] = useState('');
+
+  const options = [
+    {
+      value: 'digital',
+      icon: '💻',
+      title: 'Digital Products',
+      desc: 'Sell eBooks, courses, templates, printables, presets, and other downloadable goods. No inventory, no shipping — pure margin.',
+      examples: 'eBooks · Online Courses · Templates · Notion Planners · Presets',
+    },
+    {
+      value: 'physical',
+      icon: '📦',
+      title: 'Physical Products',
+      desc: 'Sell tangible goods via dropshipping, print-on-demand, wholesale, private label, or your own handmade products.',
+      examples: 'Dropshipping · Print-on-Demand · Private Label · Handmade · Wholesale',
+    },
+  ];
+
+  return (
+    <div className="app">
+      <header className="header">
+        <div className="header-inner">
+          <div className="logo">
+            <div className="logo-mark">⚡</div>
+            <span className="logo-name">ShopifyAgent<span>.ai</span></span>
+          </div>
+          <div className="header-badge">AI Powered</div>
+        </div>
+      </header>
+      <main className="main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+        <div style={{ maxWidth: 640, width: '100%' }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>🏪</div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--dark)', marginBottom: 8 }}>
+              What kind of store are you building?
+            </h1>
+            <p style={{ color: 'var(--gray-500)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              Your choice shapes every recommendation — from niche selection to your 30-day launch plan.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: 16, flexDirection: 'column' }}>
+            {options.map((opt) => (
+              <div
+                key={opt.value}
+                onClick={() => setSelected(opt.value)}
+                className="card"
+                style={{
+                  cursor: 'pointer',
+                  border: selected === opt.value ? '2px solid var(--primary)' : '2px solid transparent',
+                  background: selected === opt.value ? 'var(--primary-light)' : undefined,
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 16,
+                  padding: 20,
+                  transition: 'all 0.15s',
+                }}
+              >
+                <div style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>{opt.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--dark)' }}>{opt.title}</span>
+                    {selected === opt.value && (
+                      <span style={{
+                        background: 'var(--primary)', color: '#fff', fontSize: 11,
+                        fontWeight: 600, padding: '2px 8px', borderRadius: 99,
+                      }}>Selected</span>
+                    )}
+                  </div>
+                  <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: 8 }}>{opt.desc}</p>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary-dark)', fontWeight: 500 }}>{opt.examples}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button
+            className="btn btn-primary btn-lg btn-block"
+            style={{ marginTop: 24 }}
+            onClick={() => onSubmit(selected)}
+            disabled={!selected}
+          >
+            {selected === 'digital' && 'Build My Digital Product Store →'}
+            {selected === 'physical' && 'Build My Physical Product Store →'}
+            {!selected && 'Select a store type to continue →'}
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export default function App() {
   const [apiKey, setApiKey] = useState('');
+  const [storeType, setStoreType] = useState('');
   const [currentPhase, setCurrentPhase] = useState(1);
   const [projectData, setProjectData] = useState({});
   const [completed, setCompleted] = useState(false);
 
   if (!apiKey) return <ApiKeyGate onSubmit={setApiKey} />;
+  if (!storeType) return <StoreTypeGate onSubmit={setStoreType} />;
 
   const handlePhaseComplete = (phaseNum, data) => {
     const updated = { ...projectData, [`phase${phaseNum}`]: data };
@@ -107,12 +203,14 @@ export default function App() {
     setCurrentPhase(1);
     setProjectData({});
     setCompleted(false);
+    setStoreType('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const phaseProps = {
     projectData,
     apiKey,
+    storeType,
     onComplete: (data) => handlePhaseComplete(currentPhase, data),
     onBack: () => { if (currentPhase > 1) { setCurrentPhase(currentPhase - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
   };
@@ -127,6 +225,8 @@ export default function App() {
       default: return null;
     }
   };
+
+  const storeTypeBadge = storeType === 'physical' ? '📦 Physical Store' : '💻 Digital Store';
 
   return (
     <div className="app">
@@ -146,7 +246,12 @@ export default function App() {
             />
           )}
 
-          <div className="header-badge">AI Powered</div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <div className="header-badge" style={{ background: 'rgba(255,255,255,0.12)', fontSize: 12 }}>
+              {storeTypeBadge}
+            </div>
+            <div className="header-badge">AI Powered</div>
+          </div>
         </div>
       </header>
 

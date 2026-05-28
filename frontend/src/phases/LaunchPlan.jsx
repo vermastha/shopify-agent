@@ -16,7 +16,7 @@ const HOURS_OPTIONS = [
   '20–40 hours/week (Full-time)',
 ];
 
-export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) {
+export default function LaunchPlan({ projectData, onComplete, onBack, apiKey, storeType }) {
   const phase1 = projectData?.phase1;
   const phase2 = projectData?.phase2;
   const phase3 = projectData?.phase3;
@@ -50,6 +50,7 @@ export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) 
         headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
         body: JSON.stringify({
           ...inputs,
+          storeType,
           allContext: {
             niche: inputs.niche,
             product: inputs.product,
@@ -117,7 +118,7 @@ export default function LaunchPlan({ projectData, onComplete, onBack, apiKey }) 
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. 30-Day Budget Bootcamp eBook"
+              placeholder={storeType === 'physical' ? 'e.g. Minimalist Leather Wallet, Custom Pet Mug...' : 'e.g. 30-Day Budget Bootcamp eBook'}
               value={inputs.product}
               onChange={set('product')}
             />

@@ -12,7 +12,7 @@ const PLATFORM_OPTIONS = [
   'Threads',
 ];
 
-export default function MarketingContent({ projectData, onComplete, onBack, apiKey }) {
+export default function MarketingContent({ projectData, onComplete, onBack, apiKey, storeType }) {
   const phase2 = projectData?.phase2;
   const phase3 = projectData?.phase3;
   const phase1 = projectData?.phase1;
@@ -53,6 +53,7 @@ export default function MarketingContent({ projectData, onComplete, onBack, apiK
         body: JSON.stringify({
           ...inputs,
           platforms: selectedPlatforms.join(', '),
+          storeType,
         }),
       });
       const data = await res.json();
@@ -103,7 +104,7 @@ export default function MarketingContent({ projectData, onComplete, onBack, apiK
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. 30-Day Budget Bootcamp eBook, Yoga for Desk Workers Course..."
+              placeholder={storeType === 'physical' ? 'e.g. Minimalist Leather Wallet, Custom Pet Portrait Mug...' : 'e.g. 30-Day Budget Bootcamp eBook, Yoga for Desk Workers Course...'}
               value={inputs.product}
               onChange={set('product')}
             />

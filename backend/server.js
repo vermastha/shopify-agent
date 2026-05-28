@@ -38,13 +38,68 @@ function getApiKey(req, res) {
 
 // Phase 1: Niche Discovery
 app.post('/api/phase1', async (req, res) => {
-  const { interests, budget, targetAudience, hoursPerWeek } = req.body;
+  const { interests, budget, targetAudience, hoursPerWeek, storeType } = req.body;
+  const isPhysical = storeType === 'physical';
 
-  const system = `You are an expert Shopify business strategist specializing in digital products.
+  const system = isPhysical
+    ? `You are an expert Shopify business strategist specializing in physical product e-commerce.
+You help entrepreneurs find profitable niches and build sustainable online stores selling tangible goods.
+You have deep knowledge of dropshipping, print-on-demand, wholesale sourcing, private label, and handmade/craft businesses.
+Your advice is specific, actionable, and grounded in real supplier and market data.`
+    : `You are an expert Shopify business strategist specializing in digital products.
 You help entrepreneurs find profitable niches and build sustainable online businesses.
 Your advice is specific, actionable, and grounded in real market data.`;
 
-  const user = `Based on the following profile, recommend exactly 3 specific and highly profitable niches for a Shopify digital product business:
+  const user = isPhysical
+    ? `Based on the following profile, recommend exactly 3 specific and highly profitable niches for a Shopify physical product business:
+
+**Profile:**
+- Interests & Skills: ${interests}
+- Starting Budget: ${budget}
+- Target Audience: ${targetAudience}
+- Hours Available Per Week: ${hoursPerWeek}
+
+For each niche provide:
+
+## Niche [N]: [Name]
+
+**Why It's Profitable**
+[Market size, demand trends, why now is a good time]
+
+**Competition Level:** [Low / Medium / High]
+[Brief explanation of the competitive landscape]
+
+**Estimated Startup Cost**
+[Specific cost breakdown within their budget — include sample orders, Shopify plan, initial inventory if applicable]
+
+**Best Sourcing Models for This Niche**
+- Model 1 (e.g., Dropshipping via AliExpress/Spocket): [pros/cons]
+- Model 2 (e.g., Print-on-Demand via Printful/Printify): [pros/cons]
+- Model 3 (e.g., Wholesale/Private Label): [pros/cons]
+
+**Top Product Examples**
+- Product 1
+- Product 2
+- Product 3
+
+**Target Customer Profile**
+[Detailed description of who buys, their pain points, where they hang out online]
+
+**Realistic Revenue Potential**
+[Month 1–3 projection, Month 4–6 projection, Year 1 potential — be honest and realistic]
+
+**Your Unfair Advantage**
+[How their specific skills/interests give them an edge in this niche]
+
+**Logistics Snapshot**
+- Average shipping time to customer: [X days]
+- Typical product weight/size class: [small parcel / large parcel / freight]
+- Returns complexity: [Low / Medium / High]
+
+---
+
+Be specific. No generic advice. Every recommendation should be tailored to their exact profile.`
+    : `Based on the following profile, recommend exactly 3 specific and highly profitable niches for a Shopify digital product business:
 
 **Profile:**
 - Interests & Skills: ${interests}
@@ -94,14 +149,69 @@ Be specific. No generic advice. Every recommendation should be tailored to their
   }
 });
 
-// Phase 2: Digital Product Creation
+// Phase 2: Product Creation
 app.post('/api/phase2', async (req, res) => {
-  const { niche, productType, priceRange, skillLevel, phase1Output } = req.body;
+  const { niche, productType, priceRange, skillLevel, phase1Output, storeType } = req.body;
+  const isPhysical = storeType === 'physical';
 
-  const system = `You are a digital product creation expert who has helped hundreds of entrepreneurs build 6-figure Shopify stores.
+  const system = isPhysical
+    ? `You are a physical product sourcing and e-commerce expert who has built and scaled multiple successful Shopify stores selling tangible goods.
+You have hands-on experience with dropshipping, print-on-demand, wholesale buying, private label, and handmade product businesses.
+You understand supplier relationships, MOQ negotiations, profit margins, shipping logistics, and inventory management.`
+    : `You are a digital product creation expert who has helped hundreds of entrepreneurs build 6-figure Shopify stores.
 You specialize in creating high-value digital products that customers love and recommend.`;
 
-  const user = `Create 5 detailed digital product ideas for the following business:
+  const user = isPhysical
+    ? `Develop 5 detailed physical product ideas for the following business:
+
+**Business Context:**
+- Chosen Niche: ${niche}
+- Preferred Sourcing Model(s): ${productType}
+- Target Retail Price Range: ${priceRange}
+- Operator Experience Level: ${skillLevel}
+${phase1Output ? `\n**Niche Research Context:**\n${phase1Output.slice(0, 800)}` : ''}
+
+For each product, provide:
+
+## Product [N]: [Specific Product Name]
+
+**One-Line Pitch**
+[The value proposition in one punchy sentence]
+
+**Product Description**
+[2–3 sentences: what it is, who it's for, why people buy it]
+
+**Sourcing Breakdown**
+- **Sourcing Model:** [Dropshipping / Print-on-Demand / Wholesale / Private Label / Handmade]
+- **Recommended Supplier/Platform:** [e.g., Spocket, Printful, Alibaba, Faire, local manufacturer]
+- **Estimated Cost Price:** $[X] per unit
+- **Recommended Retail Price:** $[X]
+- **Gross Margin:** [X]%
+- **Minimum Order Quantity:** [X units / no MOQ for dropshipping]
+
+**Product Variants**
+[List key variants: sizes, colors, materials, etc.]
+
+**Shipping Profile**
+- Weight: [X lbs / oz]
+- Packaging size: [small / medium / large parcel]
+- Estimated shipping cost to customer: $[X]–$[X]
+
+**Time to First Sale**
+- Supplier vetting & sample order: [X days]
+- Store listing live: [X days]
+- Expected first sale: [X days after launch]
+
+**What Makes It Stand Out**
+[The specific differentiator from what's already on Amazon/Etsy]
+
+**Sales Potential**
+[Estimated monthly unit volume and revenue if marketed well]
+
+---
+
+Make these realistic for someone at a ${skillLevel} level. Prioritize products with good margins and manageable logistics.`
+    : `Create 5 detailed digital product ideas for the following business:
 
 **Business Context:**
 - Chosen Niche: ${niche}
@@ -160,10 +270,31 @@ Make these products realistic for someone at a ${skillLevel} level. Prioritize p
 
 // Phase 3: Store Setup & Branding
 app.post('/api/phase3', async (req, res) => {
-  const { niche, productName, brandValues, storeNameIdeas } = req.body;
+  const { niche, productName, brandValues, storeNameIdeas, storeType } = req.body;
+  const isPhysical = storeType === 'physical';
 
   const system = `You are a Shopify brand strategist and copywriter who has built and launched over 200 successful online stores.
 You specialize in creating brand identities that connect emotionally with customers and drive conversions.`;
+
+  const physicalExtras = isPhysical ? `
+
+## Shipping Policy Template
+Write a clear, customer-friendly shipping policy covering:
+- Processing time
+- Domestic shipping options and estimated delivery times
+- International shipping (if applicable)
+- Order tracking
+- Lost/delayed packages
+
+## Returns & Refunds Policy Template
+Write a fair, conversion-friendly returns policy covering:
+- Return window and conditions
+- How to initiate a return
+- Refunds vs store credit
+- Damaged/defective items
+
+## Product Photography Checklist
+10 must-have photo types for physical product listings (e.g., flat lay, lifestyle, close-up texture, scale reference, packaging unboxing)` : '';
 
   const user = `Create a complete Shopify store brand identity and setup guide for:
 
@@ -172,6 +303,7 @@ You specialize in creating brand identities that connect emotionally with custom
 - Main Product: ${productName}
 - Brand Values: ${brandValues}
 - Store Name Ideas (if any): ${storeNameIdeas || 'Open to suggestions'}
+- Store Type: ${isPhysical ? 'Physical Products' : 'Digital Products'}
 
 Generate all of the following:
 
@@ -216,6 +348,7 @@ For each: **[Name]** — [why it works]
 
 ## Product Page Template Structure
 [Outline the sections for a high-converting product page — title formula, description structure, what to include in each section]
+${physicalExtras}
 
 Make everything specific to this niche and product. Every word should be written as if it's going live tomorrow.`;
 
@@ -232,10 +365,18 @@ Make everything specific to this niche and product. Every word should be written
 
 // Phase 4: Marketing Content Generation
 app.post('/api/phase4', async (req, res) => {
-  const { storeName, product, niche, platforms, targetAudience } = req.body;
+  const { storeName, product, niche, platforms, targetAudience, storeType } = req.body;
+  const isPhysical = storeType === 'physical';
 
-  const system = `You are a digital marketing strategist specializing in organic and paid traffic for Shopify stores.
+  const system = isPhysical
+    ? `You are a digital marketing strategist specializing in organic and paid traffic for Shopify stores selling physical products.
+You create content that converts — not just content that gets likes. You understand how to showcase physical products visually, leverage UGC and unboxing content, and build purchase intent for tangible goods.`
+    : `You are a digital marketing strategist specializing in organic and paid traffic for Shopify stores.
 You create content that converts — not just content that gets likes. You understand the psychology of buyers.`;
+
+  const socialGuidance = isPhysical
+    ? `Vary the content types: product unboxing/reveal, lifestyle in-use shots, customer UGC repost concept, behind-the-scenes packing/sourcing, before/after, problem-solution, promotional. For each post include a note on the visual format (static image, reel/short video, carousel).`
+    : `Vary the content types: educational, testimonial-style, behind-the-scenes, promotional, storytelling.`;
 
   const user = `Create a complete marketing content package for this Shopify store:
 
@@ -245,6 +386,7 @@ You create content that converts — not just content that gets likes. You under
 - Niche: ${niche}
 - Marketing Platforms: ${platforms}
 - Target Audience: ${targetAudience}
+- Store Type: ${isPhysical ? 'Physical Products' : 'Digital Products'}
 
 Generate all of the following:
 
@@ -257,7 +399,7 @@ For each post include:
 - **Visual Concept:** [What the image/video should show]
 - **Best Time to Post:** [Day + time]
 
-Vary the content types: educational, testimonial-style, behind-the-scenes, promotional, storytelling.
+${socialGuidance}
 
 ## Email Marketing Sequence — 5 Emails
 
@@ -304,10 +446,46 @@ Make all content feel human, specific to this product, and designed to drive cli
 
 // Phase 5: 30-Day Launch Plan
 app.post('/api/phase5', async (req, res) => {
-  const { storeName, niche, product, weeklyBudget, hoursPerWeek, allContext } = req.body;
+  const { storeName, niche, product, weeklyBudget, hoursPerWeek, allContext, storeType } = req.body;
+  const isPhysical = storeType === 'physical';
 
-  const system = `You are a Shopify launch strategist who has taken dozens of stores from zero to their first $10k in sales.
+  const system = isPhysical
+    ? `You are a Shopify launch strategist who has taken dozens of physical product stores from zero to their first $10k in sales.
+You create realistic, achievable launch plans that account for the real-world constraints of physical goods: supplier lead times, sample ordering, shipping setup, and inventory management.`
+    : `You are a Shopify launch strategist who has taken dozens of stores from zero to their first $10k in sales.
 You create realistic, achievable launch plans tailored to the founder's constraints — not theoretical ideal-world scenarios.`;
+
+  const week1Physical = isPhysical
+    ? `## Week 1: Foundation & Sourcing (Days 1–7)
+**Goal: Lock in supplier, order samples, and start building the store**`
+    : `## Week 1: Foundation (Days 1–7)
+**Goal: Get the store live and ready**`;
+
+  const milestonesPhysical = isPhysical
+    ? `## Milestone Targets
+- Day 7 milestone: Supplier confirmed, sample ordered, Shopify store skeleton live
+- Day 14 milestone: Sample received and approved, product photos taken, store fully built
+- Day 21 milestone: Store live, 500+ people in audience/email list, pre-launch buzz created
+- Day 30 milestone: First 5–10 sales made, first customer reviews collected`
+    : `## Milestone Targets
+- Day 7 milestone:
+- Day 14 milestone:
+- Day 21 milestone:
+- Day 30 milestone:`;
+
+  const troubleshootingPhysical = isPhysical
+    ? `## If Things Aren't Working: Troubleshooting Guide
+
+**Supplier delays pushing your launch back?** [How to communicate with supplier + backup supplier strategy]
+**No traffic by Day 21?** [Specific action steps]
+**Traffic but no sales?** [Conversion fix checklist — product photos, price, trust signals]
+**Shipping complaints from first customers?** [How to handle and improve fulfillment]
+**First sale but nothing since?** [Momentum maintenance + retargeting]`
+    : `## If Things Aren't Working: Troubleshooting Guide
+
+**No traffic by Day 21?** [Specific action steps]
+**Traffic but no sales?** [Conversion fix checklist]
+**First sale but nothing since?** [Momentum maintenance]`;
 
   const user = `Create a detailed, day-by-day 30-day launch plan for this business:
 
@@ -317,9 +495,9 @@ You create realistic, achievable launch plans tailored to the founder's constrai
 - Hero Product: ${product}
 - Weekly Budget: ${weeklyBudget}
 - Hours Available Per Week: ${hoursPerWeek}
+- Store Type: ${isPhysical ? 'Physical Products' : 'Digital Products'}
 
-## Week 1: Foundation (Days 1–7)
-**Goal: Get the store live and ready**
+${week1Physical}
 
 For each day:
 **Day [N] — [Theme]** (~[X] hours)
@@ -337,23 +515,15 @@ For each day:
 [Same format as Week 1]
 
 ## Week 4: Launch & First Sales (Days 22–30)
-**Goal: Make your first 10 sales**
+**Goal: Make your first ${isPhysical ? '5–10' : '10'} sales**
 [Same format as Week 1]
 
 ## Weekly Success Metrics
 What numbers to track each week and what "good" looks like.
 
-## Milestone Targets
-- Day 7 milestone:
-- Day 14 milestone:
-- Day 21 milestone:
-- Day 30 milestone:
+${milestonesPhysical}
 
-## If Things Aren't Working: Troubleshooting Guide
-
-**No traffic by Day 21?** [Specific action steps]
-**Traffic but no sales?** [Conversion fix checklist]
-**First sale but nothing since?** [Momentum maintenance]
+${troubleshootingPhysical}
 
 ## Month 2 Priorities
 Top 5 tasks to focus on after the launch month — how to build on momentum or course-correct.

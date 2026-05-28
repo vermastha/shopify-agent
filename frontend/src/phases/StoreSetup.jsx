@@ -12,7 +12,7 @@ const BRAND_VALUE_OPTIONS = [
   'Luxury & Premium',
 ];
 
-export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) {
+export default function StoreSetup({ projectData, onComplete, onBack, apiKey, storeType }) {
   const phase1 = projectData?.phase1;
   const phase2 = projectData?.phase2;
 
@@ -47,6 +47,7 @@ export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) 
         body: JSON.stringify({
           ...inputs,
           brandValues: selectedValues.join(', '),
+          storeType,
         }),
       });
       const data = await res.json();
@@ -96,7 +97,7 @@ export default function StoreSetup({ projectData, onComplete, onBack, apiKey }) 
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. Budget Planning Masterclass, Yoga for Desk Workers eBook..."
+              placeholder={storeType === 'physical' ? 'e.g. Minimalist Leather Wallet, Custom Pet Portrait Mug...' : 'e.g. Budget Planning Masterclass, Yoga for Desk Workers eBook...'}
               value={inputs.productName}
               onChange={set('productName')}
             />

@@ -16,7 +16,7 @@ const HOURS_OPTIONS = [
   '20–40 hours/week (Full focus)',
 ];
 
-export default function NicheDiscovery({ onComplete, apiKey }) {
+export default function NicheDiscovery({ onComplete, apiKey, storeType }) {
   const [inputs, setInputs] = useState({
     interests: '',
     budget: BUDGET_OPTIONS[1],
@@ -39,7 +39,7 @@ export default function NicheDiscovery({ onComplete, apiKey }) {
       const res = await fetch('/api/phase1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
-        body: JSON.stringify(inputs),
+        body: JSON.stringify({ ...inputs, storeType }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'API error');
@@ -57,7 +57,7 @@ export default function NicheDiscovery({ onComplete, apiKey }) {
         <div className="phase-badge">Phase 1 of 5 · 🔍 Niche Discovery</div>
         <h1 className="phase-title">Find Your Profitable Niche</h1>
         <p className="phase-desc">
-          Tell us about yourself and your Shopify Agent will identify 3 high-potential niches tailored specifically to your skills, budget, and goals.
+          Tell us about yourself and your Shopify Agent will identify 3 high-potential {storeType === 'physical' ? 'physical product' : 'digital product'} niches tailored specifically to your skills, budget, and goals.
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export default function NicheDiscovery({ onComplete, apiKey }) {
           error={error}
           emptyIcon="🔍"
           emptyTitle="3 Niche Recommendations"
-          emptyDesc="Your Shopify Agent will analyze your profile and surface the most profitable niches for your digital product business."
+          emptyDesc={`Your Shopify Agent will analyze your profile and surface the most profitable niches for your ${storeType === 'physical' ? 'physical product' : 'digital product'} business.`}
           onProceed={() => onComplete({ inputs, output })}
           proceedLabel="I've chosen my niche → Next Phase"
         />
